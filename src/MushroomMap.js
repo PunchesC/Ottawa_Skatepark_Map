@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   GoogleMap,
   useLoadScript,
@@ -30,7 +31,19 @@ function MushroomMap() {
       googleMapsApiKey:process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
       libraries,
     });
-  const [markers, setMarkers]
+  const [markers, setMarkers] = useState([]);
+  const onMapClick = useCallback((event)=> {
+    setMarkers(current => [...current, {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+      time: new Date(),
+    }])
+   }, []);
+
+  const mapRef = useRef();
+  const onMapLoad = useCallback((map) => {
+    mapRef.current=map;
+  },[])
 
   if (loadError) return "Error loading Map";
   if(!isLoaded) return "Loading Maps";
@@ -41,14 +54,20 @@ function MushroomMap() {
     mapContainerStyle={mapContainerStyle}
     zoom={7} 
     center={center}
-    onClick={(event)=> {
-     console.log(event);
-    }
-    }
-    ></GoogleMap>
+    onClick={
+      onMapClick
+    }onLoad={onMapLoad}
+    >
+      {markers.map((marker) => <Marker key={marker.time.toISOString()} position={{lat: marker.lat, lng: marker.lng}} />)}
+
+    </GoogleMap>
       
     </div>
   );
 }
 
 export default MushroomMap;
+
+
+// use to style icon and resize -- Work on later!!
+// icon={{url: "src\mushroom2.png", scaledSize: new window.google.maps.Size(30,30)}}
