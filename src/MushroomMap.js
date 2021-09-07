@@ -132,7 +132,20 @@ function MushroomMap() {
       />)}
     {selected ? (<InfoWindow position={{lat: selected.lat,lng: selected.lng}} onCloseClick={()=>setSelected(null)}>
       <div>
-        <h2>This is where the select form shall be</h2>
+        <h2>What is here?</h2>
+        <form>
+          <label>
+          <select>
+            <option>Mushroom</option>
+            <option>Great Location</option>
+            <option>Poor Location</option>
+            <option>Great Views</option>
+            <option>Difficult Terrain</option>
+          </select>
+        </label>
+        <textarea></textarea>
+        <button>Save</button>
+        </form>
         <p>Spotted {formatRelative(selected.time, new Date())}</p>
       </div>
     </InfoWindow>):null}
